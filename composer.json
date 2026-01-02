@@ -1,0 +1,59 @@
+{
+  "name": "el-schneider/statamic-maintenance-mode",
+  "description": "Set your statamic site into maintenance mode",
+  "type": "statamic-addon",
+  "license": "MIT",
+  "keywords": [
+    "statamic",
+    "maintenance"
+  ],
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Jonas List",
+      "email": "mail@jonaslist.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/el-schneider/statamic-maintenance-mode/issues"
+  },
+  "autoload": {
+    "psr-4": {
+      "ElSchneider\\StatamicMaintenanceMode\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "statamic": {
+      "name": "Statamic Maintenance Mode",
+      "description": "Set your statamic site into maintenance mode"
+    },
+    "laravel": {
+      "providers": [
+        "ElSchneider\\StatamicMaintenanceMode\\ServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "statamic/cms": "^5.0 || ^6.0"
+  },
+  "require-dev": {
+    "laravel/pint": "^1.14",
+    "orchestra/testbench": "^10.0",
+    "pestphp/pest": "^4.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pixelfear/composer-dist-plugin": true,
+      "pestphp/pest-plugin": true
+    }
+  }
+}
