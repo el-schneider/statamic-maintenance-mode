@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\YAML;
+use Throwable;
 
 class MaintenanceModeConfig
 {
@@ -18,29 +19,6 @@ class MaintenanceModeConfig
     public function __construct()
     {
         $this->load();
-    }
-
-    protected function path(): string
-    {
-        return base_path('content/maintenance-mode.yaml');
-    }
-
-    protected function load(): void
-    {
-        if ($this->loaded) {
-            return;
-        }
-
-        if (File::exists($this->path())) {
-            try {
-                $parsed = YAML::file($this->path())->parse();
-                $this->data = is_array($parsed) ? $parsed : [];
-            } catch (\Throwable) {
-                $this->data = [];
-            }
-        }
-
-        $this->loaded = true;
     }
 
     public function save(): void
@@ -123,5 +101,28 @@ class MaintenanceModeConfig
     public function setWhitelistEntries(array $entryIds): static
     {
         return $this->set('whitelist_entries', $entryIds);
+    }
+
+    protected function path(): string
+    {
+        return base_path('content/maintenance-mode.yaml');
+    }
+
+    protected function load(): void
+    {
+        if ($this->loaded) {
+            return;
+        }
+
+        if (File::exists($this->path())) {
+            try {
+                $parsed = YAML::file($this->path())->parse();
+                $this->data = is_array($parsed) ? $parsed : [];
+            } catch (Throwable) {
+                $this->data = [];
+            }
+        }
+
+        $this->loaded = true;
     }
 }

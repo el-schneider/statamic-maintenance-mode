@@ -6,7 +6,7 @@ pest()->extend(Tests\TestCase::class)->in('Feature');
 
 function makeSuperUser()
 {
-    return \Statamic\Facades\User::make()
+    return Statamic\Facades\User::make()
         ->makeSuper()
         ->email('super@example.com')
         ->save();
@@ -14,11 +14,11 @@ function makeSuperUser()
 
 function makeUserWithPermission(string $permission)
 {
-    $role = \Statamic\Facades\Role::make('test_role')
+    $role = Statamic\Facades\Role::make('test_role')
         ->permissions([$permission])
         ->save();
 
-    return \Statamic\Facades\User::make()
+    return Statamic\Facades\User::make()
         ->email('user@example.com')
         ->assignRole($role)
         ->save();

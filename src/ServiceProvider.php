@@ -23,6 +23,20 @@ class ServiceProvider extends AddonServiceProvider
         $this->registerUtility();
     }
 
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/maintenance-mode.php', 'statamic.maintenance-mode');
+
+        $this->app->singleton(MaintenanceModeConfig::class, function () {
+            return new MaintenanceModeConfig;
+        });
+
+        // Replace Laravel's maintenance middleware with ours
+        $this->app->bind(LaravelMiddleware::class, PreventRequestsDuringMaintenance::class);
+
+        parent::register();
+    }
+
     protected function registerUtility(): void
     {
         Utility::extend(function () {
@@ -38,19 +52,5 @@ class ServiceProvider extends AddonServiceProvider
                     $router->post('/deactivate', [MaintenanceModeController::class, 'deactivate'])->name('deactivate');
                 });
         });
-    }
-
-    public function register(): void
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/maintenance-mode.php', 'statamic.maintenance-mode');
-
-        $this->app->singleton(MaintenanceModeConfig::class, function () {
-            return new MaintenanceModeConfig;
-        });
-
-        // Replace Laravel's maintenance middleware with ours
-        $this->app->bind(LaravelMiddleware::class, PreventRequestsDuringMaintenance::class);
-
-        parent::register();
     }
 }
