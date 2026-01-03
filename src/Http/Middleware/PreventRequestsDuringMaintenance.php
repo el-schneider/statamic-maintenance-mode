@@ -6,11 +6,13 @@ namespace ElSchneider\StatamicMaintenanceMode\Http\Middleware;
 
 use Closure;
 use ElSchneider\StatamicMaintenanceMode\MaintenanceModeConfig;
+use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
 use Statamic\Facades\User;
 use Statamic\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 class PreventRequestsDuringMaintenance extends LaravelMiddleware
 {
@@ -25,7 +27,7 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
             return $next($request);
         }
 
-        if ($this->isAuthenticatedCpUser()) {
+        if ($this->isAuthenticatedCpUser($request)) {
             return $next($request);
         }
 
@@ -54,11 +56,45 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
         return Str::startsWith($path, '/'.$cpPath);
     }
 
-    protected function isAuthenticatedCpUser(): bool
+    protected function isAuthenticatedCpUser($request): bool
     {
-        $user = User::current();
+        // Session may not be started yet in global middleware
+        // We need to manually bootstrap the session from the cookie
+        try {
+            $sessionName = config('session.cookie', 'laravel_session');
+            $encryptedSessionId = $request->cookies->get($sessionName);
 
-        return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+            if (! $encryptedSessionId) {
+                return false;
+            }
+
+            // Decrypt the session ID (cookies are encrypted by default)
+            $decryptedValue = $this->app['encrypter']->decrypt($encryptedSessionId, false);
+
+            // Laravel prefixes cookie values with a 40-char HMAC + pipe
+            $sessionId = CookieValuePrefix::remove($decryptedValue);
+
+            // Start session with the cookie's session ID
+            $session = $this->app['session']->driver();
+            $session->setId($sessionId);
+            $session->start();
+
+            // Check for user ID in session directly
+            $guardName = config('statamic.users.guards.cp', 'web');
+            $userIdKey = 'login_'.$guardName.'_'.sha1(\Illuminate\Auth\SessionGuard::class);
+            $userId = $session->get($userIdKey);
+
+            if (! $userId) {
+                return false;
+            }
+
+            // Find the user and check permissions
+            $user = User::find($userId);
+
+            return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     protected function isWhitelistedPage($request): bool
