@@ -17,5 +17,9 @@
     "Deactivate": "Deactivate",
     "Configuration": "Configuration",
     "No collections available. Create a collection to select a maintenance page or whitelisted pages.": "No collections available. Create a collection to select a maintenance page or whitelisted pages.",
-    "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.": "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page."
+    "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.": "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.",
+    "Bypass URL": "Bypass URL",
+    "Share this URL to grant temporary access during maintenance. Visitors who open this link will receive a cookie that bypasses maintenance mode.": "Share this URL to grant temporary access during maintenance. Visitors who open this link will receive a cookie that bypasses maintenance mode.",
+    "Copy": "Copy",
+    "Copied to clipboard": "Copied to clipboard"
 }

@@ -6,7 +6,7 @@
     <h1 class="flex-1">{{ $title }}</h1>
 </div>
 
-<div class="card p-4 mb-16">
+<div class="card p-4 mb-6">
     <div class="flex items-center justify-between">
         <div>
             <h2 class="font-bold text-lg">{{ __('Status') }}</h2>
@@ -37,6 +37,31 @@
         </div>
     </div>
 </div>
+
+@if($isActive && $secretUrl)
+<div class="card p-4 mb-6 bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+    <h2 class="font-bold text-lg mb-2">{{ __('Bypass URL') }}</h2>
+    <p class="text-sm text-gray-600 dark:text-dark-150 mb-3">
+        {{ __('Share this URL to grant temporary access during maintenance. Visitors who open this link will receive a cookie that bypasses maintenance mode.') }}
+    </p>
+    <div class="flex items-center gap-2">
+        <input
+            type="text"
+            readonly
+            value="{{ $secretUrl }}"
+            class="input-text flex-1 font-mono text-sm bg-white dark:bg-dark-700"
+            id="secret-url-input"
+        >
+        <button
+            type="button"
+            class="btn"
+            onclick="copySecretUrl()"
+        >
+            {{ __('Copy') }}
+        </button>
+    </div>
+</div>
+@endif
 
 @if($hasCollections)
 <publish-form
@@ -89,6 +114,20 @@
                 window.location.reload();
             }
         });
+    }
+
+    function copySecretUrl() {
+        const input = document.getElementById('secret-url-input');
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(input.value).then(() => {
+                Statamic.$toast.success(@json(__('Copied to clipboard')));
+            });
+        } else {
+            input.select();
+            document.execCommand('copy');
+            Statamic.$toast.success(@json(__('Copied to clipboard')));
+        }
     }
 </script>
 @endsection

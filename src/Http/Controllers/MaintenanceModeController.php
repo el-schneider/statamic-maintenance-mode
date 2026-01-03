@@ -53,6 +53,8 @@ class MaintenanceModeController extends CpController
             'whitelist_entries' => $whitelistValue,
         ])->preProcess();
 
+        $secretUrl = $this->getSecretUrl();
+
         return view('statamic-maintenance-mode::cp.utility', [
             'title' => __('Maintenance Mode'),
             'isActive' => app()->isDownForMaintenance(),
@@ -62,6 +64,7 @@ class MaintenanceModeController extends CpController
             'meta' => $fields->meta(),
             'values' => $fields->values(),
             'hasCollections' => ! empty($collections),
+            'secretUrl' => $secretUrl,
         ]);
     }
 
@@ -89,9 +92,26 @@ class MaintenanceModeController extends CpController
 
     public function activate()
     {
-        Artisan::call('down', [
-            '--retry' => 60,
-        ]);
+        $options = config('statamic.maintenance-mode.down_options', []);
+        $args = [];
+
+        if (! empty($options['retry'])) {
+            $args['--retry'] = $options['retry'];
+        }
+
+        if (! empty($options['secret'])) {
+            if ($options['secret'] === true) {
+                $args['--with-secret'] = true;
+            } else {
+                $args['--secret'] = $options['secret'];
+            }
+        }
+
+        if (! empty($options['refresh'])) {
+            $args['--refresh'] = $options['refresh'];
+        }
+
+        Artisan::call('down', $args);
 
         Toast::success(__('Maintenance mode activated'));
 
@@ -111,5 +131,17 @@ class MaintenanceModeController extends CpController
             'success' => true,
             'isActive' => false,
         ]);
+    }
+
+    protected function getSecretUrl(): ?string
+    {
+        if (! app()->isDownForMaintenance()) {
+            return null;
+        }
+
+        $data = app()->maintenanceMode()->data();
+        $secret = $data['secret'] ?? null;
+
+        return $secret ? url($secret) : null;
     }
 }

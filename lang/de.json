@@ -17,5 +17,9 @@
     "Deactivate": "Deaktivieren",
     "Configuration": "Konfiguration",
     "No collections available. Create a collection to select a maintenance page or whitelisted pages.": "Keine Sammlungen verfügbar. Erstellen Sie eine Sammlung, um eine Wartungsseite oder freigegebene Seiten auszuwählen.",
-    "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.": "Möchten Sie den Wartungsmodus wirklich aktivieren? Besucher sehen dann die Wartungsseite."
+    "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.": "Möchten Sie den Wartungsmodus wirklich aktivieren? Besucher sehen dann die Wartungsseite.",
+    "Bypass URL": "Umgehungs-URL",
+    "Share this URL to grant temporary access during maintenance. Visitors who open this link will receive a cookie that bypasses maintenance mode.": "Teilen Sie diese URL, um während der Wartung temporären Zugang zu gewähren. Besucher, die diesen Link öffnen, erhalten ein Cookie, das den Wartungsmodus umgeht.",
+    "Copy": "Kopieren",
+    "Copied to clipboard": "In die Zwischenablage kopiert"
 }

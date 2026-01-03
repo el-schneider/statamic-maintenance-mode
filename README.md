@@ -28,7 +28,7 @@ Maintenance mode uses Laravel's built-in system (`php artisan down`/`up`), so yo
 
 ## Configuration
 
-By default, only entries from the `pages` collection can be selected in the utility panel. To allow other collections, publish the config file:
+Publish the config file to customize the addon:
 
 ```bash
 php artisan vendor:publish --tag=statamic-maintenance-mode-config
@@ -38,9 +38,25 @@ Then edit `config/statamic/maintenance-mode.php`:
 
 ```php
 return [
-    'collections' => ['pages', 'landing-pages', 'articles'],
+    // Collections available for selection in the utility panel
+    'collections' => ['pages'],
+
+    // Options passed to Laravel's `artisan down` command
+    'down_options' => [
+        'retry' => 60,
+        'secret' => true,  // or a custom string like 'my-secret-bypass'
+    ],
 ];
 ```
+
+### Bypass URL for External Visitors
+
+Set `secret` to generate a bypass URL you can share with clients or stakeholders:
+
+- `true` - generates a random secret URL
+- `'my-custom-secret'` - uses your custom string
+
+When someone visits the bypass URL, they receive a cookie that lets them browse the site normally during maintenance. The bypass URL is displayed in the control panel with a copy button when maintenance mode is active.
 
 ## Customizing the Maintenance Page
 
