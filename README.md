@@ -1,3 +1,5 @@
+<img src="images/mm_banner.png" alt="Auto Alt Text">
+
 # Statamic Maintenance Mode
 
 > Manage maintenance mode through Statamic's control panel using Laravel's native maintenance system
