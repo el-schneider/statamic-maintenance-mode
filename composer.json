@@ -7,7 +7,6 @@
     "statamic",
     "maintenance"
   ],
-  "version": "0.1.0",
   "authors": [
     {
       "name": "Jonas List",
@@ -40,7 +39,7 @@
     }
   },
   "require": {
-    "statamic/cms": "^5.0 || ^6.0"
+    "statamic/cms": "^5.0"
   },
   "require-dev": {
     "laravel/pint": "^1.14",
