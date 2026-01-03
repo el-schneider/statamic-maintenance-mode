@@ -26,16 +26,16 @@ class MaintenanceModeController extends CpController
             $blueprintFields = [
                 'maintenance_entry' => [
                     'type' => 'entries',
-                    'display' => 'Maintenance Page',
-                    'instructions' => 'Select an entry to display during maintenance. If not set, a default template will be used.',
+                    'display' => __('Maintenance Page'),
+                    'instructions' => __('Select an entry to display during maintenance. If not set, a default template will be used.'),
                     'max_items' => 1,
                     'create' => false,
                     'collections' => $collections,
                 ],
                 'whitelist_entries' => [
                     'type' => 'entries',
-                    'display' => 'Whitelisted Pages',
-                    'instructions' => 'These pages will remain accessible during maintenance mode.',
+                    'display' => __('Whitelisted Pages'),
+                    'instructions' => __('These pages will remain accessible during maintenance mode.'),
                     'create' => false,
                     'collections' => $collections,
                 ],

@@ -9,12 +9,12 @@
 <div class="card p-4 mb-16">
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="font-bold text-lg">Status</h2>
+            <h2 class="font-bold text-lg">{{ __('Status') }}</h2>
             <p class="text-sm text-gray-600 dark:text-dark-150">
                 @if($isActive)
-                    Maintenance mode is currently <span class="text-red-500 font-bold">active</span>.
+                    {{ __('Maintenance mode is currently') }} <span class="text-red-500 font-bold">{{ __('active') }}</span>.
                 @else
-                    Maintenance mode is currently <span class="text-green-500 font-bold">inactive</span>.
+                    {{ __('Maintenance mode is currently') }} <span class="text-green-500 font-bold">{{ __('inactive') }}</span>.
                 @endif
             </p>
         </div>
@@ -24,14 +24,14 @@
                     class="btn-primary"
                     onclick="deactivateMaintenance()"
                 >
-                    Deactivate
+                    {{ __('Deactivate') }}
                 </button>
             @else
                 <button
                     class="btn-danger"
                     onclick="activateMaintenance()"
                 >
-                    Activate
+                    {{ __('Activate') }}
                 </button>
             @endif
         </div>
@@ -49,14 +49,14 @@
 @else
 <div class="card p-4">
     <p class="text-gray-600 dark:text-dark-150">
-        No collections available. Create a collection to select a maintenance page or whitelisted pages.
+        {{ __('No collections available. Create a collection to select a maintenance page or whitelisted pages.') }}
     </p>
 </div>
 @endif
 
 <script>
     function activateMaintenance() {
-        if (!confirm('Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.')) {
+        if (!confirm(@json(__('Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.')))) {
             return;
         }
 

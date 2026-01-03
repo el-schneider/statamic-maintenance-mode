@@ -1,0 +1,21 @@
+{
+    "Maintenance Mode": "Maintenance Mode",
+    "Maintenance": "Maintenance",
+    "Configure and activate maintenance mode": "Configure and activate maintenance mode",
+    "Maintenance Page": "Maintenance Page",
+    "Select an entry to display during maintenance. If not set, a default template will be used.": "Select an entry to display during maintenance. If not set, a default template will be used.",
+    "Whitelisted Pages": "Whitelisted Pages",
+    "These pages will remain accessible during maintenance mode.": "These pages will remain accessible during maintenance mode.",
+    "Settings saved": "Settings saved",
+    "Maintenance mode activated": "Maintenance mode activated",
+    "Maintenance mode deactivated": "Maintenance mode deactivated",
+    "Status": "Status",
+    "Maintenance mode is currently": "Maintenance mode is currently",
+    "active": "active",
+    "inactive": "inactive",
+    "Activate": "Activate",
+    "Deactivate": "Deactivate",
+    "Configuration": "Configuration",
+    "No collections available. Create a collection to select a maintenance page or whitelisted pages.": "No collections available. Create a collection to select a maintenance page or whitelisted pages.",
+    "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.": "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page."
+}

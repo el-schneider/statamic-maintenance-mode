@@ -1,0 +1,21 @@
+{
+    "Maintenance Mode": "Wartungsmodus",
+    "Maintenance": "Wartung",
+    "Configure and activate maintenance mode": "Wartungsmodus konfigurieren und aktivieren",
+    "Maintenance Page": "Wartungsseite",
+    "Select an entry to display during maintenance. If not set, a default template will be used.": "Wählen Sie einen Eintrag aus, der während der Wartung angezeigt werden soll. Wenn nicht festgelegt, wird eine Standardvorlage verwendet.",
+    "Whitelisted Pages": "Freigegebene Seiten",
+    "These pages will remain accessible during maintenance mode.": "Diese Seiten bleiben während des Wartungsmodus erreichbar.",
+    "Settings saved": "Einstellungen gespeichert",
+    "Maintenance mode activated": "Wartungsmodus aktiviert",
+    "Maintenance mode deactivated": "Wartungsmodus deaktiviert",
+    "Status": "Status",
+    "Maintenance mode is currently": "Der Wartungsmodus ist derzeit",
+    "active": "aktiv",
+    "inactive": "inaktiv",
+    "Activate": "Aktivieren",
+    "Deactivate": "Deaktivieren",
+    "Configuration": "Konfiguration",
+    "No collections available. Create a collection to select a maintenance page or whitelisted pages.": "Keine Sammlungen verfügbar. Erstellen Sie eine Sammlung, um eine Wartungsseite oder freigegebene Seiten auszuwählen.",
+    "Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.": "Möchten Sie den Wartungsmodus wirklich aktivieren? Besucher sehen dann die Wartungsseite."
+}
