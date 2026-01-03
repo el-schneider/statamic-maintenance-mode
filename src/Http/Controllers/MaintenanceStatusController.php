@@ -7,6 +7,7 @@ namespace ElSchneider\StatamicMaintenanceMode\Http\Controllers;
 use Illuminate\Foundation\Http\MaintenanceModeBypassCookie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Statamic\Facades\User;
 
 class MaintenanceStatusController
@@ -26,7 +27,14 @@ class MaintenanceStatusController
 
     protected function isAuthenticatedCpUser(): bool
     {
-        $user = User::current();
+        $guardName = config('statamic.users.guards.cp', 'web');
+        $authUser = Auth::guard($guardName)->user();
+
+        if (! $authUser) {
+            return false;
+        }
+
+        $user = User::find($authUser->getAuthIdentifier());
 
         return $user && ($user->isSuper() || $user->hasPermission('access cp'));
     }

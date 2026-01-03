@@ -17,7 +17,7 @@ class MaintenanceNotice extends Tags
         }
 
         $content = $this->isPair
-            ? $this->parse()
+            ? $this->parseContent()
             : $this->defaultBadge();
 
         $html = sprintf(
@@ -33,6 +33,17 @@ class MaintenanceNotice extends Tags
         return $html;
     }
 
+    protected function parseContent(): string
+    {
+        $parsed = $this->parse();
+
+        if (is_string($parsed)) {
+            return $parsed;
+        }
+
+        return $this->content ?? '';
+    }
+
     protected function defaultBadge(): string
     {
         $label = __('Maintenance Mode Active');
@@ -46,12 +57,14 @@ class MaintenanceNotice extends Tags
 
     protected function script(): string
     {
-        return <<<'HTML'
+        $statusUrl = $this->statusUrl();
+
+        return <<<HTML
         <script>
         (function(){
             var ric = window.requestIdleCallback || function(c){setTimeout(c,100)};
             ric(function(){
-                fetch('/!/statamic-maintenance-mode/status', {credentials:'include'})
+                fetch('{$statusUrl}', {credentials:'include'})
                     .then(function(r){return r.json()})
                     .then(function(d){
                         if(d.show){
@@ -64,5 +77,12 @@ class MaintenanceNotice extends Tags
         })();
         </script>
         HTML;
+    }
+
+    protected function statusUrl(): string
+    {
+        $actionPrefix = config('statamic.routes.action', '!/');
+
+        return '/'.mb_trim($actionPrefix, '/').'/statamic-maintenance-mode/status';
     }
 }

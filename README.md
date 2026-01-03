@@ -77,7 +77,3 @@ RewriteRule .* static%{REQUEST_URI}_%{QUERY_STRING}.html [L,T=text/html]
 ```
 
 Half measure static caching works without server configuration since requests still pass through PHP.
-
-## Upgrading from v2.x
-
-Version 3.0 stores configuration in `content/maintenance-mode.yaml` instead of Statamic globals. After upgrading, reconfigure your settings in **Utilities > Maintenance**.

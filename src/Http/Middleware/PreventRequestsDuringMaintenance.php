@@ -62,7 +62,10 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
 
     protected function isMaintenanceStatusRoute($request): bool
     {
-        return $request->path() === '!/statamic-maintenance-mode/status';
+        $actionPrefix = mb_trim(config('statamic.routes.action', '!/'), '/');
+        $expectedPath = $actionPrefix.'/statamic-maintenance-mode/status';
+
+        return $request->path() === $expectedPath;
     }
 
     protected function isAuthenticatedCpUser($request): bool
