@@ -18,6 +18,10 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->loadJsonTranslationsFrom(__DIR__.'/../lang');
 
+        $this->publishes([
+            __DIR__.'/../config/maintenance-mode.php' => config_path('statamic/maintenance-mode.php'),
+        ], 'statamic-maintenance-mode-config');
+
         $this->registerUtility();
     }
 

@@ -17,8 +17,8 @@ class MaintenanceModeController extends CpController
     {
         $config = app(MaintenanceModeConfig::class);
 
-        // Get all available collections
-        $collections = \Statamic\Facades\Collection::handles()->all();
+        // Get configured collections (defaults to ['pages'])
+        $collections = config('statamic.maintenance-mode.collections', ['pages']);
 
         // Only include entries fields if collections exist
         $blueprintFields = [];

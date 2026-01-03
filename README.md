@@ -26,6 +26,22 @@ When maintenance mode is active:
 
 Maintenance mode uses Laravel's built-in system (`php artisan down`/`up`), so you can also manage it via CLI.
 
+## Configuration
+
+By default, only entries from the `pages` collection can be selected in the utility panel. To allow other collections, publish the config file:
+
+```bash
+php artisan vendor:publish --tag=statamic-maintenance-mode-config
+```
+
+Then edit `config/statamic/maintenance-mode.php`:
+
+```php
+return [
+    'collections' => ['pages', 'landing-pages', 'articles'],
+];
+```
+
 ## Customizing the Maintenance Page
 
 By default, visitors see Laravel's built-in 503 error page. You have two options to customize it:
