@@ -88,13 +88,8 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
             return response($content, 503, $this->getHeaders($data));
         }
 
-        $view = config('statamic.maintenance-mode.view', 'statamic-maintenance-mode::errors.503');
-
-        return response(
-            view($view)->render(),
-            503,
-            $this->getHeaders($data)
-        );
+        // Let Laravel's exception handler render its default 503 view
+        throw new HttpException(503, 'Service Unavailable', null, $this->getHeaders($data));
     }
 
     protected function getDownData(): array

@@ -79,13 +79,12 @@ it('allows whitelisted pages during maintenance', function () {
     expect($response->status())->toBe(200);
 });
 
-it('renders default template when no entry configured', function () {
+it('renders Laravel default 503 template when no entry configured', function () {
     Artisan::call('down');
 
     $response = $this->get('/non-existent');
     $response->assertStatus(503);
-    // Check for content from our custom 503 template
-    $response->assertSee('scheduled maintenance');
+    $response->assertSee('Service Unavailable');
 });
 
 it('saves configuration via CP endpoint', function () {

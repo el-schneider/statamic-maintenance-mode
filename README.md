@@ -2,8 +2,6 @@
 
 # Statamic Maintenance Mode
 
-![Statamic 5.0+](https://img.shields.io/badge/Statamic-5.0+-FF269E?style=flat-square&link=https://statamic.com)
-
 ## How to Install
 
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or run the following command from your project root:
@@ -11,16 +9,6 @@ You can search for this addon in the `Tools > Addons` section of the Statamic co
 ```bash
 composer require el-schneider/statamic-maintenance-mode
 ```
-
-## How to configure (optional)
-
-You can override the default options by publishing the configuration:
-
-```bash
-php artisan vendor:publish --tag=statamic-maintenance-mode-config
-```
-
-This will copy the default config file to `config/statamic/maintenance-mode.php`.
 
 ## How to Use
 
@@ -31,17 +19,37 @@ This will copy the default config file to `config/statamic/maintenance-mode.php`
 5. Click **Activate** to enable maintenance mode
 
 When maintenance mode is active:
+
 - Visitors see a 503 response with your configured maintenance page (or a default template)
 - CP users with "access cp" permission can browse the site normally
 - Whitelisted pages remain accessible to everyone
 
 Maintenance mode uses Laravel's built-in system (`php artisan down`/`up`), so you can also manage it via CLI.
 
+## Customizing the Maintenance Page
+
+By default, visitors see Laravel's built-in 503 error page. You have two options to customize it:
+
+### Option 1: Use a Statamic Entry (Recommended)
+
+Select any Statamic entry as your maintenance page in the utility panel. This gives you full control using your existing templates and content.
+
+### Option 2: Publish Laravel's Error Views
+
+Run the following command to publish Laravel's error templates:
+
+```bash
+php artisan vendor:publish --tag=laravel-errors
+```
+
+Then edit `resources/views/errors/503.blade.php` to customize the maintenance page.
+
 ## Upgrading from v2.x
 
 Version 3.0 changes how configuration is stored. Instead of Statamic globals, configuration is now stored in `content/maintenance-mode.yaml`.
 
 **After upgrading:**
+
 1. Navigate to **Utilities > Maintenance** in the CP
 2. Reconfigure your maintenance entry and whitelist entries
 3. Click **Save**
