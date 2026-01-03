@@ -27,6 +27,10 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
             return $next($request);
         }
 
+        if ($this->isMaintenanceStatusRoute($request)) {
+            return $next($request);
+        }
+
         if ($this->isAuthenticatedCpUser($request)) {
             return $next($request);
         }
@@ -54,6 +58,11 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
         $path = Str::start($request->path(), '/');
 
         return Str::startsWith($path, '/'.$cpPath);
+    }
+
+    protected function isMaintenanceStatusRoute($request): bool
+    {
+        return $request->path() === '!/statamic-maintenance-mode/status';
     }
 
     protected function isAuthenticatedCpUser($request): bool

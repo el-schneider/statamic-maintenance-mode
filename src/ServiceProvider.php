@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace ElSchneider\StatamicMaintenanceMode;
 
 use ElSchneider\StatamicMaintenanceMode\Http\Controllers\MaintenanceModeController;
+use ElSchneider\StatamicMaintenanceMode\Http\Controllers\MaintenanceStatusController;
 use ElSchneider\StatamicMaintenanceMode\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
+use Illuminate\Support\Facades\Route;
 use Statamic\Facades\Utility;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -23,6 +25,10 @@ class ServiceProvider extends AddonServiceProvider
         ], 'statamic-maintenance-mode-config');
 
         $this->registerUtility();
+        $this->registerActionRoutes(function () {
+            Route::get('status', MaintenanceStatusController::class)
+                ->name('status');
+        });
     }
 
     public function register(): void
