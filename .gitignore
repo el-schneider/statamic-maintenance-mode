@@ -3,3 +3,4 @@ vendor
 mix-manifest.json
 .phpunit.*
 tests/__fixtures__
+resources/dist/hot

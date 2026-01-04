@@ -7,67 +7,11 @@ namespace ElSchneider\StatamicMaintenanceMode\Http\Controllers;
 use ElSchneider\StatamicMaintenanceMode\MaintenanceModeConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Statamic\Facades\Blueprint;
 use Statamic\Facades\CP\Toast;
 use Statamic\Http\Controllers\CP\CpController;
 
 class MaintenanceModeController extends CpController
 {
-    public function index()
-    {
-        $config = app(MaintenanceModeConfig::class);
-
-        // Get configured collections (defaults to ['pages'])
-        $collections = config('statamic.maintenance-mode.collections', ['pages']);
-
-        // Only include entries fields if collections exist
-        $blueprintFields = [];
-        if (! empty($collections)) {
-            $blueprintFields = [
-                'maintenance_entry' => [
-                    'type' => 'entries',
-                    'display' => __('Maintenance Page'),
-                    'instructions' => __('Select an entry to display during maintenance. If not set, a default template will be used.'),
-                    'max_items' => 1,
-                    'create' => false,
-                    'collections' => $collections,
-                ],
-                'whitelist_entries' => [
-                    'type' => 'entries',
-                    'display' => __('Whitelisted Pages'),
-                    'instructions' => __('These pages will remain accessible during maintenance mode.'),
-                    'create' => false,
-                    'collections' => $collections,
-                ],
-            ];
-        }
-
-        $blueprint = Blueprint::makeFromFields($blueprintFields);
-
-        // Wrap single entry in array for entries fieldtype, filter nulls
-        $maintenanceEntryValue = $config->maintenanceEntryId() ? [$config->maintenanceEntryId()] : [];
-        $whitelistValue = $config->whitelistEntryIds();
-
-        $fields = $blueprint->fields()->addValues([
-            'maintenance_entry' => $maintenanceEntryValue,
-            'whitelist_entries' => $whitelistValue,
-        ])->preProcess();
-
-        $secretUrl = $this->getSecretUrl();
-
-        return view('statamic-maintenance-mode::cp.utility', [
-            'title' => __('Maintenance Mode'),
-            'isActive' => app()->isDownForMaintenance(),
-            'maintenanceEntry' => $config->maintenanceEntryId(),
-            'whitelistEntries' => $config->whitelistEntryIds(),
-            'blueprint' => $blueprint->toPublishArray(),
-            'meta' => $fields->meta(),
-            'values' => $fields->values(),
-            'hasCollections' => ! empty($collections),
-            'secretUrl' => $secretUrl,
-        ]);
-    }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -131,17 +75,5 @@ class MaintenanceModeController extends CpController
             'success' => true,
             'isActive' => false,
         ]);
-    }
-
-    protected function getSecretUrl(): ?string
-    {
-        if (! app()->isDownForMaintenance()) {
-            return null;
-        }
-
-        $data = app()->maintenanceMode()->data();
-        $secret = $data['secret'] ?? null;
-
-        return $secret ? url($secret) : null;
     }
 }

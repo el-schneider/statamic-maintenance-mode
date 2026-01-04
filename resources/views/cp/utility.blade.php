@@ -2,85 +2,80 @@
 @section('title', $title)
 
 @section('content')
-<div class="flex items-center justify-between mb-6">
-    <h1 class="flex-1">{{ $title }}</h1>
-</div>
+<ui-header title="{{ $title }}">
+    @if($isActive)
+        <ui-button style="background: #16a34a; border-color: #15803d; color: white;" onclick="window.deactivateMaintenance()">
+            {{ __('Deactivate') }}
+        </ui-button>
+    @else
+        <ui-button variant="danger" onclick="window.activateMaintenance()">
+            {{ __('Activate') }}
+        </ui-button>
+    @endif
+</ui-header>
 
-<div class="card p-4 mb-6">
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="font-bold text-lg">{{ __('Status') }}</h2>
-            <p class="text-sm text-gray-600 dark:text-dark-150">
+<div class="space-y-6">
+    <ui-panel>
+        <ui-panel-header>
+            <ui-heading text="{{ __('Status') }}" />
+        </ui-panel-header>
+        <ui-card>
+            <ui-description>
                 @if($isActive)
-                    {{ __('Maintenance mode is currently') }} <span class="text-red-500 font-bold">{{ __('active') }}</span>.
+                    {{ __('Maintenance mode is currently') }} <ui-badge color="red">{{ __('active') }}</ui-badge>.
                 @else
-                    {{ __('Maintenance mode is currently') }} <span class="text-green-500 font-bold">{{ __('inactive') }}</span>.
+                    {{ __('Maintenance mode is currently') }} <ui-badge color="green">{{ __('inactive') }}</ui-badge>.
                 @endif
-            </p>
-        </div>
-        <div>
-            @if($isActive)
-                <button
-                    class="btn-primary"
-                    onclick="deactivateMaintenance()"
+            </ui-description>
+        </ui-card>
+    </ui-panel>
+
+    @if($isActive && $secretUrl)
+    <ui-panel>
+        <ui-panel-header>
+            <ui-heading text="{{ __('Bypass URL') }}" />
+        </ui-panel-header>
+        <ui-card class="bg-amber-50 dark:bg-amber-950/30">
+            <ui-description class="mb-3">
+                {{ __('Share this URL to grant temporary access during maintenance. Visitors who open this link will receive a cookie that bypasses maintenance mode.') }}
+            </ui-description>
+            <div class="flex items-center gap-2">
+                <input
+                    type="text"
+                    readonly
+                    value="{{ $secretUrl }}"
+                    id="secret-url-input"
+                    class="flex-1 font-mono text-sm px-3 h-10 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
                 >
-                    {{ __('Deactivate') }}
-                </button>
-            @else
-                <button
-                    class="btn-danger"
-                    onclick="activateMaintenance()"
-                >
-                    {{ __('Activate') }}
-                </button>
-            @endif
-        </div>
-    </div>
-</div>
+                <ui-button onclick="window.copySecretUrl()">
+                    {{ __('Copy') }}
+                </ui-button>
+            </div>
+        </ui-card>
+    </ui-panel>
+    @endif
 
-@if($isActive && $secretUrl)
-<div class="card p-4 mb-6 bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
-    <h2 class="font-bold text-lg mb-2">{{ __('Bypass URL') }}</h2>
-    <p class="text-sm text-gray-600 dark:text-dark-150 mb-3">
-        {{ __('Share this URL to grant temporary access during maintenance. Visitors who open this link will receive a cookie that bypasses maintenance mode.') }}
-    </p>
-    <div class="flex items-center gap-2">
-        <input
-            type="text"
-            readonly
-            value="{{ $secretUrl }}"
-            class="input-text flex-1 font-mono text-sm bg-white dark:bg-dark-700"
-            id="secret-url-input"
-        >
-        <button
-            type="button"
-            class="btn"
-            onclick="copySecretUrl()"
-        >
-            {{ __('Copy') }}
-        </button>
-    </div>
+    @if($hasCollections)
+    <ui-publish-form
+        title="{{ __('Configuration') }}"
+        submit-url="{{ cp_route('utilities.maintenance-mode.store') }}"
+        :blueprint='@json($blueprint)'
+        :initial-meta='@json($meta)'
+        :initial-values='@json($values)'
+    />
+    @else
+    <ui-card>
+        <ui-description>
+            {{ __('No collections available. Create a collection to select a maintenance page or whitelisted pages.') }}
+        </ui-description>
+    </ui-card>
+    @endif
 </div>
-@endif
+@endsection
 
-@if($hasCollections)
-<publish-form
-    :title="__('Configuration')"
-    action="{{ cp_route('utilities.maintenance-mode.store') }}"
-    :blueprint='@json($blueprint)'
-    :meta='@json($meta)'
-    :values='@json($values)'
-></publish-form>
-@else
-<div class="card p-4">
-    <p class="text-gray-600 dark:text-dark-150">
-        {{ __('No collections available. Create a collection to select a maintenance page or whitelisted pages.') }}
-    </p>
-</div>
-@endif
-
+@section('scripts')
 <script>
-    function activateMaintenance() {
+    window.activateMaintenance = function() {
         if (!confirm(@json(__('Are you sure you want to activate maintenance mode? Visitors will see the maintenance page.')))) {
             return;
         }
@@ -98,9 +93,9 @@
                 window.location.reload();
             }
         });
-    }
+    };
 
-    function deactivateMaintenance() {
+    window.deactivateMaintenance = function() {
         fetch('{{ cp_route('utilities.maintenance-mode.deactivate') }}', {
             method: 'POST',
             headers: {
@@ -114,9 +109,9 @@
                 window.location.reload();
             }
         });
-    }
+    };
 
-    function copySecretUrl() {
+    window.copySecretUrl = function() {
         const input = document.getElementById('secret-url-input');
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -128,6 +123,6 @@
             document.execCommand('copy');
             Statamic.$toast.success(@json(__('Copied to clipboard')));
         }
-    }
+    };
 </script>
 @endsection

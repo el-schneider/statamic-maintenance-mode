@@ -1,0 +1,8 @@
+node_modules
+vendor
+bootstrap/cache
+storage
+public
+resources/dist
+resources/views
+*.lock

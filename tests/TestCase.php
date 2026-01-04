@@ -5,11 +5,20 @@ declare(strict_types=1);
 namespace Tests;
 
 use ElSchneider\StatamicMaintenanceMode\ServiceProvider;
+use Statamic\Facades\CP\Nav;
 use Statamic\Testing\AddonTestCase;
 
 abstract class TestCase extends AddonTestCase
 {
     protected string $addonServiceProvider = ServiceProvider::class;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Statamic v6 calls Nav::clearCachedUrls() when saving collections
+        Nav::shouldReceive('clearCachedUrls')->zeroOrMoreTimes();
+    }
 
     protected function resolveApplicationConfiguration($app): void
     {
