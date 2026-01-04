@@ -1,59 +1,59 @@
 name: Fix code style issues
 
 on:
-  push:
-    paths:
-      - '**/*.php'
-      - 'composer.json'
-      - 'composer.lock'
-      - 'pint.json'
-      - 'resources/**/*.{js,ts,vue,json,css,scss}'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.prettierrc'
-      - '.prettierignore'
-      - 'tsconfig.json'
-      - 'vite.config.js'
+    push:
+        paths:
+            - '**/*.php'
+            - 'composer.json'
+            - 'composer.lock'
+            - 'pint.json'
+            - 'resources/**/*.{js,ts,vue,json,css,scss}'
+            - 'package.json'
+            - 'package-lock.json'
+            - '.prettierrc'
+            - '.prettierignore'
+            - 'tsconfig.json'
+            - 'vite.config.js'
 
 permissions:
-  contents: write
+    contents: write
 
 jobs:
-  code-styling:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    code-styling:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref }}
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          coverage: none
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+                  coverage: none
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+            - name: Install Composer dependencies
+              run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Fix PHP code style issues
-        run: ./vendor/bin/pint
+            - name: Fix PHP code style issues
+              run: ./vendor/bin/pint
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: npm
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: npm
 
-      - name: Install npm dependencies
-        run: npm install
+            - name: Install npm dependencies
+              run: npm install
 
-      - name: Fix JS code style issues
-        run: npm run format
+            - name: Fix JS code style issues
+              run: npm run format
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Fix styling
+            - name: Commit changes
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: Fix styling
