@@ -2,6 +2,8 @@
 
 # Statamic Maintenance Mode
 
+![Statamic 5](https://img.shields.io/badge/Statamic-5-FF269E) ![Statamic 6](https://img.shields.io/badge/Statamic-6-FF269E) ![PHP 8.3+](https://img.shields.io/badge/PHP-8.3+-777BB4)
+
 > Manage maintenance mode through Statamic's control panel using Laravel's native maintenance system
 
 ## Requirements
