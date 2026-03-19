@@ -5,7 +5,6 @@ on:
         paths:
             - '**/*.php'
             - 'composer.json'
-            - 'composer.lock'
             - 'pint.json'
             - 'resources/**/*.{js,ts,vue,json,css,scss}'
             - 'package.json'
@@ -48,7 +47,7 @@ jobs:
                   cache: npm
 
             - name: Install npm dependencies
-              run: npm install
+              run: npm ci
 
             - name: Fix JS code style issues
               run: npm run format
