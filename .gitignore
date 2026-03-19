@@ -1,6 +1,20 @@
-node_modules
-vendor
-mix-manifest.json
-.phpunit.*
-tests/__fixtures__
+# Composer
+composer.lock
+/vendor
+
+# Frontend
+/node_modules
 resources/dist/hot
+
+# Testing
+/build
+/coverage
+.phpunit.*
+
+# IDE
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+/.idea
+/.fleet
+/.vscode
