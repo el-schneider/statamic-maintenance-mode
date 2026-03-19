@@ -9,19 +9,13 @@ use ElSchneider\StatamicMaintenanceMode\Http\Controllers\MaintenanceStatusContro
 use ElSchneider\StatamicMaintenanceMode\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
 use Illuminate\Support\Facades\Route;
-use Statamic\Facades\Utility;
+use Statamic\CP\Utilities\Utility;
+use Statamic\Facades\Utility as UtilityFacade;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
     protected $viewNamespace = 'statamic-maintenance-mode';
-
-    protected $vite = [
-        'input' => [
-            'resources/js/addon.js',
-        ],
-        'publicDirectory' => 'resources/dist',
-    ];
 
     public function bootAddon()
     {
@@ -49,24 +43,44 @@ class ServiceProvider extends AddonServiceProvider
         // Replace Laravel's maintenance middleware with ours
         $this->app->bind(LaravelMiddleware::class, PreventRequestsDuringMaintenance::class);
 
+        // Only load Vite assets when Statamic v6+ is available (inertia component)
+        if ($this->supportsInertia()) {
+            $this->vite = [
+                'input' => [
+                    'resources/js/addon.js',
+                ],
+                'publicDirectory' => 'resources/dist',
+            ];
+        }
+
         parent::register();
     }
 
     protected function registerUtility(): void
     {
-        Utility::extend(function () {
-            Utility::register('maintenance-mode')
+        UtilityFacade::extend(function () {
+            $utility = UtilityFacade::register('maintenance-mode')
                 ->title(__('Maintenance Mode'))
                 ->navTitle(__('Maintenance'))
                 ->description(__('Configure and activate maintenance mode'))
                 ->icon('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>')
-                ->inertia('MaintenanceMode', fn () => $this->getUtilityData())
                 ->routes(function ($router) {
                     $router->post('/', [MaintenanceModeController::class, 'store'])->name('store');
                     $router->post('/activate', [MaintenanceModeController::class, 'activate'])->name('activate');
                     $router->post('/deactivate', [MaintenanceModeController::class, 'deactivate'])->name('deactivate');
                 });
+
+            if ($this->supportsInertia()) {
+                $utility->inertia('MaintenanceMode', fn ($request) => $this->getUtilityData());
+            } else {
+                $utility->view('statamic-maintenance-mode::cp.utility', fn ($request) => $this->getUtilityData());
+            }
         });
+    }
+
+    protected function supportsInertia(): bool
+    {
+        return method_exists(Utility::class, 'inertia');
     }
 
     protected function getUtilityData(): array
