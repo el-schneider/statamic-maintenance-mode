@@ -4,6 +4,11 @@
 
 > Manage maintenance mode through Statamic's control panel using Laravel's native maintenance system
 
+## Requirements
+
+- Statamic 5 or 6
+- PHP 8.3+
+
 ## Features
 
 - **Laravel Native:** Uses Laravel's built-in `artisan down`/`up` commands, supporting all standard options like retry headers, refresh intervals, and secret bypass URLs
@@ -17,6 +22,8 @@
 ```bash
 composer require el-schneider/statamic-maintenance-mode
 ```
+
+The addon automatically detects your Statamic version and uses the appropriate UI — an Inertia Vue component on v6, a Blade view on v5.
 
 ## Usage
 
