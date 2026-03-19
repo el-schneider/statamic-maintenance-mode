@@ -1,0 +1,43 @@
+name: Build assets for distribution
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'resources/js/**'
+      - 'resources/css/**'
+      - 'vite.config.js'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  build-dist:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      # @statamic/cms is distributed via Composer, not npm
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install front-end dependencies
+        run: npm ci
+
+      - name: Compile assets
+        run: npm run build
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Build assets for distribution
+          file_pattern: 'resources/dist/*'

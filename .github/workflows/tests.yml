@@ -12,7 +12,13 @@ jobs:
 
     strategy:
       matrix:
-        php-version: [8.3]
+        include:
+          - php-version: '8.3'
+            statamic: '^5.0'
+          - php-version: '8.3'
+            statamic: '^6.0'
+
+    name: PHP ${{ matrix.php-version }} – Statamic ${{ matrix.statamic }}
 
     steps:
       - name: Checkout code
@@ -25,16 +31,10 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: vendor
-          key: composer-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            composer-${{ matrix.php-version }}-
-
       - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: |
+          composer require statamic/cms:${{ matrix.statamic }} --no-interaction --no-update
+          composer update --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Run Pint
         run: ./vendor/bin/pint --test
