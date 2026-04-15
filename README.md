@@ -29,7 +29,7 @@ The addon automatically detects your Statamic version and uses the appropriate U
 
 Navigate to **Utilities > Maintenance** in the control panel to configure and activate maintenance mode.
 
-Control panel users with "access cp" permission can browse the frontend during maintenance.
+Control panel users with at least one of the permissions defined in config/maintenance-mode or the default "access cp" permission can browse the frontend during maintenance.
 
 ## Configuration
 
