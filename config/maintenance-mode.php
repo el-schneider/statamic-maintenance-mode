@@ -46,4 +46,27 @@ return [
     |
     */
     'show_frontend_notice' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Only Super Users have Maintenance mode menu
+    |--------------------------------------------------------------------------
+    |
+    | Controls whether to display the maintenance mode in utilities nav for all
+    | users or superusers only
+    |
+    */
+    'show_menu_for_supers_only' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permissions Allowed to Bypass Maintenance Mode
+    |--------------------------------------------------------------------------
+    |
+    | Super users and users with at least one of the below permissions will be
+    | allowed to bypass maintenance mode
+    | By default, users with "access cp" permissions can bypass maintenance mode
+    |
+    */
+    'allow_bypass_for_perms' => ['access cp'],
 ];
