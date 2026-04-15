@@ -36,7 +36,10 @@ class MaintenanceStatusController
 
         $user = User::find($authUser->getAuthIdentifier());
 
-        return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+        return $user && ($user->isSuper() || ! empty(array_filter(
+            config('statamic.maintenance-mode.allow_bypass_for_perms', []),
+            fn ($perm) => $user->hasPermission($perm)
+        )));
     }
 
     protected function hasValidBypassCookie(Request $request): bool
