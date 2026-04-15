@@ -59,28 +59,31 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerUtility(): void
     {
-        $canDisplayforSupersOnly = config('statamic.maintenance-mode.show_menu_for_supers_only', false);
 
-        if (! $canDisplayforSupersOnly || User::current()?->isSuper()) {
-            UtilityFacade::extend(function () {
-                $utility = UtilityFacade::register('maintenance-mode')
-                    ->title(__('Maintenance Mode'))
-                    ->navTitle(__('Maintenance'))
-                    ->description(__('Configure and activate maintenance mode'))
-                    ->icon($this->supportsInertia() ? 'construction-barrier' : 'hammer-wrench')
-                    ->routes(function ($router) {
-                        $router->post('/', [MaintenanceModeController::class, 'store'])->name('store');
-                        $router->post('/activate', [MaintenanceModeController::class, 'activate'])->name('activate');
-                        $router->post('/deactivate', [MaintenanceModeController::class, 'deactivate'])->name('deactivate');
-                    });
+        UtilityFacade::extend(function () {
+            $canDisplayforSupersOnly = config('statamic.maintenance-mode.show_menu_for_supers_only', false);
 
-                if ($this->supportsInertia()) {
-                    $utility->inertia('MaintenanceMode', fn ($request) => $this->getUtilityData());
-                } else {
-                    $utility->view('statamic-maintenance-mode::cp.utility', fn ($request) => $this->getUtilityData());
-                }
-            });
-        }
+            if ($canDisplayforSupersOnly && ! User::current()?->isSuper()) {
+                return;
+            }
+
+            $utility = UtilityFacade::register('maintenance-mode')
+                ->title(__('Maintenance Mode'))
+                ->navTitle(__('Maintenance'))
+                ->description(__('Configure and activate maintenance mode'))
+                ->icon($this->supportsInertia() ? 'construction-barrier' : 'hammer-wrench')
+                ->routes(function ($router) {
+                    $router->post('/', [MaintenanceModeController::class, 'store'])->name('store');
+                    $router->post('/activate', [MaintenanceModeController::class, 'activate'])->name('activate');
+                    $router->post('/deactivate', [MaintenanceModeController::class, 'deactivate'])->name('deactivate');
+                });
+
+            if ($this->supportsInertia()) {
+                $utility->inertia('MaintenanceMode', fn ($request) => $this->getUtilityData());
+            } else {
+                $utility->view('statamic-maintenance-mode::cp.utility', fn ($request) => $this->getUtilityData());
+            }
+        });
     }
 
     protected function supportsInertia(): bool
