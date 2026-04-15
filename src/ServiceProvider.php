@@ -10,6 +10,7 @@ use ElSchneider\StatamicMaintenanceMode\Http\Middleware\PreventRequestsDuringMai
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
 use Illuminate\Support\Facades\Route;
 use Statamic\CP\Utilities\Utility;
+use Statamic\Facades\User;
 use Statamic\Facades\Utility as UtilityFacade;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -58,24 +59,28 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerUtility(): void
     {
-        UtilityFacade::extend(function () {
-            $utility = UtilityFacade::register('maintenance-mode')
-                ->title(__('Maintenance Mode'))
-                ->navTitle(__('Maintenance'))
-                ->description(__('Configure and activate maintenance mode'))
-                ->icon($this->supportsInertia() ? 'construction-barrier' : 'hammer-wrench')
-                ->routes(function ($router) {
-                    $router->post('/', [MaintenanceModeController::class, 'store'])->name('store');
-                    $router->post('/activate', [MaintenanceModeController::class, 'activate'])->name('activate');
-                    $router->post('/deactivate', [MaintenanceModeController::class, 'deactivate'])->name('deactivate');
-                });
+        $canDisplayforSupersOnly = config('statamic.maintenance-mode.show_menu_for_supers_only', false);
 
-            if ($this->supportsInertia()) {
-                $utility->inertia('MaintenanceMode', fn ($request) => $this->getUtilityData());
-            } else {
-                $utility->view('statamic-maintenance-mode::cp.utility', fn ($request) => $this->getUtilityData());
-            }
-        });
+        if (! $canDisplayforSupersOnly || User::current()?->isSuper()) {
+            UtilityFacade::extend(function () {
+                $utility = UtilityFacade::register('maintenance-mode')
+                    ->title(__('Maintenance Mode'))
+                    ->navTitle(__('Maintenance'))
+                    ->description(__('Configure and activate maintenance mode'))
+                    ->icon($this->supportsInertia() ? 'construction-barrier' : 'hammer-wrench')
+                    ->routes(function ($router) {
+                        $router->post('/', [MaintenanceModeController::class, 'store'])->name('store');
+                        $router->post('/activate', [MaintenanceModeController::class, 'activate'])->name('activate');
+                        $router->post('/deactivate', [MaintenanceModeController::class, 'deactivate'])->name('deactivate');
+                    });
+
+                if ($this->supportsInertia()) {
+                    $utility->inertia('MaintenanceMode', fn ($request) => $this->getUtilityData());
+                } else {
+                    $utility->view('statamic-maintenance-mode::cp.utility', fn ($request) => $this->getUtilityData());
+                }
+            });
+        }
     }
 
     protected function supportsInertia(): bool
