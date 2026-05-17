@@ -61,10 +61,12 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerPermissions(): void
     {
         Permission::extend(function ($permissions) {
-            $permissions->register('bypass maintenance mode', function ($permission) {
-                $permission
-                    ->label(__('Bypass maintenance mode'))
-                    ->description(__('View the site while maintenance mode is active.'));
+            $permissions->group('cp', function () use ($permissions) {
+                $permissions->register(Permissions::BYPASS_MAINTENANCE_MODE, function ($permission) {
+                    $permission
+                        ->label(__('Bypass maintenance mode'))
+                        ->description(__('View the site while maintenance mode is active.'));
+                });
             });
         });
     }

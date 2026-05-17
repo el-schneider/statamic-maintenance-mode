@@ -6,6 +6,7 @@ namespace ElSchneider\StatamicMaintenanceMode\Http\Middleware;
 
 use Closure;
 use ElSchneider\StatamicMaintenanceMode\MaintenanceModeConfig;
+use ElSchneider\StatamicMaintenanceMode\Permissions as MaintenancePermissions;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
 use Statamic\Facades\User;
@@ -102,7 +103,7 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
 
             $user = User::find($userId);
 
-            return $user && ($user->isSuper() || $user->hasPermission('bypass maintenance mode'));
+            return $user && ($user->isSuper() || $user->hasPermission(MaintenancePermissions::BYPASS_MAINTENANCE_MODE));
         } catch (Throwable) {
             return false;
         }

@@ -9,6 +9,8 @@ use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 
 beforeEach(function () {
+    config(['session.driver' => 'file']);
+
     // Ensure we're not in maintenance mode
     Artisan::call('up');
 

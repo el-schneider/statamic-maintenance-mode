@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### What's changed
+
+- Frontend maintenance bypass for non-super users now requires the `bypass maintenance mode` permission instead of `access cp`.
+
 ## v0.2.0 - 2026-03-19
 
 ### What's new

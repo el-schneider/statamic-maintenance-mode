@@ -14,12 +14,16 @@ function makeSuperUser()
 
 function makeUserWithPermission(string $permission)
 {
-    $role = Statamic\Facades\Role::make(str_replace(' ', '_', $permission))
+    static $count = 0;
+
+    $count++;
+
+    $role = Statamic\Facades\Role::make(str_replace(' ', '_', $permission).'_'.$count)
         ->permissions([$permission])
         ->save();
 
     return Statamic\Facades\User::make()
-        ->email(str_replace(' ', '-', $permission).'@example.com')
+        ->email(str_replace(' ', '-', $permission).'-'.$count.'@example.com')
         ->assignRole($role)
         ->save();
 }
@@ -30,7 +34,6 @@ function authenticatedSessionCookie($user): array
     $guardName = config('statamic.users.guards.cp', 'web');
     $userIdKey = 'login_'.$guardName.'_'.sha1(Illuminate\Auth\SessionGuard::class);
 
-    config(['session.driver' => 'file']);
     $sessionId = Illuminate\Support\Str::random(40);
     $session = $app['session']->driver();
     $session->setId($sessionId);

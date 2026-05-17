@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElSchneider\StatamicMaintenanceMode\Http\Controllers;
 
+use ElSchneider\StatamicMaintenanceMode\Permissions as MaintenancePermissions;
 use Illuminate\Foundation\Http\MaintenanceModeBypassCookie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class MaintenanceStatusController
 
         $user = User::find($authUser->getAuthIdentifier());
 
-        return $user && ($user->isSuper() || $user->hasPermission('bypass maintenance mode'));
+        return $user && ($user->isSuper() || $user->hasPermission(MaintenancePermissions::BYPASS_MAINTENANCE_MODE));
     }
 
     protected function hasValidBypassCookie(Request $request): bool
