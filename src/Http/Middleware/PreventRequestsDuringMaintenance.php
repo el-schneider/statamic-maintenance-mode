@@ -100,10 +100,9 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
                 return false;
             }
 
-            // Find the user and check permissions
             $user = User::find($userId);
 
-            return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+            return $user && ($user->isSuper() || $user->hasPermission('bypass maintenance mode'));
         } catch (Throwable) {
             return false;
         }

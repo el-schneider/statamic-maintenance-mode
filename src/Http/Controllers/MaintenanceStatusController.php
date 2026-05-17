@@ -19,7 +19,6 @@ class MaintenanceStatusController
             return response()->json(['show' => false]);
         }
 
-        // Check if user can bypass maintenance
         $canBypass = $this->isAuthenticatedCpUser() || $this->hasValidBypassCookie($request);
 
         return response()->json(['show' => $canBypass]);
@@ -36,7 +35,7 @@ class MaintenanceStatusController
 
         $user = User::find($authUser->getAuthIdentifier());
 
-        return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+        return $user && ($user->isSuper() || $user->hasPermission('bypass maintenance mode'));
     }
 
     protected function hasValidBypassCookie(Request $request): bool

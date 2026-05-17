@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 use ElSchneider\StatamicMaintenanceMode\MaintenanceModeConfig;
-use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 

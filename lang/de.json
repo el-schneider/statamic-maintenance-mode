@@ -1,6 +1,8 @@
 {
     "Maintenance Mode": "Wartungsmodus",
     "Maintenance": "Wartung",
+    "Bypass maintenance mode": "Wartungsmodus umgehen",
+    "View the site while maintenance mode is active.": "Website ansehen, während der Wartungsmodus aktiv ist.",
     "Configure and activate maintenance mode": "Wartungsmodus konfigurieren und aktivieren",
     "Maintenance Page": "Wartungsseite",
     "Select an entry to display during maintenance. If not set, a default template will be used.": "Wählen Sie einen Eintrag aus, der während der Wartung angezeigt werden soll. Wenn nicht festgelegt, wird eine Standardvorlage verwendet.",
