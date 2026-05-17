@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.3.0 - 2026-05-17
+
+### Breaking changes
+
+- Non-super users now need the new `bypass maintenance mode` permission to browse the frontend while maintenance mode is active. Previously, any user with `access cp` could bypass maintenance mode. Grant `bypass maintenance mode` to existing roles that should keep frontend access during maintenance.
+
+### What's new
+
+- Added a dedicated `bypass maintenance mode` Statamic permission.
+
+### Maintenance
+
+- Raised supported Statamic versions to security-patched releases: `^5.73.21 || ^6.15`.
+- Updated npm lockfile dependencies to resolve reported advisories.
+
 ## v0.2.0 - 2026-03-19
 
 ### What's new
