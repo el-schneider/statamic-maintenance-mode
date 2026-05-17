@@ -20,12 +20,12 @@ class MaintenanceStatusController
             return response()->json(['show' => false]);
         }
 
-        $canBypass = $this->isAuthenticatedCpUser() || $this->hasValidBypassCookie($request);
+        $canBypass = $this->isAuthenticatedBypassUser() || $this->hasValidBypassCookie($request);
 
         return response()->json(['show' => $canBypass]);
     }
 
-    protected function isAuthenticatedCpUser(): bool
+    protected function isAuthenticatedBypassUser(): bool
     {
         $guardName = config('statamic.users.guards.cp', 'web');
         $authUser = Auth::guard($guardName)->user();

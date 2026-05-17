@@ -61,7 +61,7 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerPermissions(): void
     {
         Permission::extend(function ($permissions) {
-            $permissions->group('cp', function () use ($permissions) {
+            $permissions->group('utilities', function () use ($permissions) {
                 $permissions->register(Permissions::BYPASS_MAINTENANCE_MODE, function ($permission) {
                     $permission
                         ->label(__('Bypass maintenance mode'))

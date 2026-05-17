@@ -37,6 +37,8 @@ function authenticatedSessionCookie($user): array
     $sessionId = Illuminate\Support\Str::random(40);
     $session = $app['session']->driver();
     $session->setId($sessionId);
+    $session->start();
+    $session->flush();
     $session->put($userIdKey, $user->id());
     $session->save();
 

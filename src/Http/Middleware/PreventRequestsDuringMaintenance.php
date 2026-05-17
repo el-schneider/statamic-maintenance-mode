@@ -32,7 +32,7 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
             return $next($request);
         }
 
-        if ($this->isAuthenticatedCpUser($request)) {
+        if ($this->isAuthenticatedBypassUser($request)) {
             return $next($request);
         }
 
@@ -69,7 +69,7 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
         return $request->path() === $expectedPath;
     }
 
-    protected function isAuthenticatedCpUser($request): bool
+    protected function isAuthenticatedBypassUser($request): bool
     {
         // Session may not be started yet in global middleware
         // We need to manually bootstrap the session from the cookie
