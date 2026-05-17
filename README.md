@@ -36,6 +36,8 @@ Access is controlled through Statamic permissions:
 
 Super users can always access both.
 
+When upgrading, grant `bypass maintenance mode` to any non-super roles that previously relied on `access cp` to browse during maintenance.
+
 ## Configuration
 
 Publish the configuration file:
