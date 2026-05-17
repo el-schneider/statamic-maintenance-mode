@@ -43,7 +43,7 @@ it('returns show true for authenticated super users during maintenance', functio
 it('returns show true for users with bypass permission during maintenance', function () {
     Artisan::call('down');
 
-    $user = makeUserWithPermission('bypass maintenance mode');
+    $user = makeUserWithPermission('bypass maintenance mode', 'status-bypass-user@example.com');
 
     $response = $this->actingAs($user)->get('/!/statamic-maintenance-mode/status');
 
@@ -54,7 +54,7 @@ it('returns show true for users with bypass permission during maintenance', func
 it('returns show false for users without bypass permission during maintenance', function () {
     Artisan::call('down');
 
-    $user = makeUserWithPermission('access cp');
+    $user = makeUserWithPermission('access cp', 'status-cp-user@example.com');
 
     $response = $this->actingAs($user)->get('/!/statamic-maintenance-mode/status');
 

@@ -70,8 +70,8 @@ it('only allows users with the bypass permission to bypass maintenance mode', fu
 
     Artisan::call('down');
 
-    $cpUser = makeUserWithPermission('access cp');
-    $bypassUser = makeUserWithPermission('bypass maintenance mode');
+    $cpUser = makeUserWithPermission('access cp', 'cp-user@example.com');
+    $bypassUser = makeUserWithPermission('bypass maintenance mode', 'bypass-user@example.com');
 
     $this->call('GET', '/test-page', [], authenticatedSessionCookie($cpUser))
         ->assertStatus(503);

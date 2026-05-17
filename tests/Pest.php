@@ -12,18 +12,14 @@ function makeSuperUser()
         ->save();
 }
 
-function makeUserWithPermission(string $permission)
+function makeUserWithPermission(string $permission, string $email)
 {
-    static $count = 0;
-
-    $count++;
-
-    $role = Statamic\Facades\Role::make(str_replace(' ', '_', $permission).'_'.$count)
+    $role = Statamic\Facades\Role::make(str_replace('@', '_', $email))
         ->permissions([$permission])
         ->save();
 
     return Statamic\Facades\User::make()
-        ->email(str_replace(' ', '-', $permission).'-'.$count.'@example.com')
+        ->email($email)
         ->assignRole($role)
         ->save();
 }
