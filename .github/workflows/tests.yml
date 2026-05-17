@@ -14,9 +14,9 @@ jobs:
       matrix:
         include:
           - php-version: '8.3'
-            statamic: '^5.0'
+            statamic: '^5.73.21'
           - php-version: '8.3'
-            statamic: '^6.0'
+            statamic: '^6.15'
 
     name: PHP ${{ matrix.php-version }} – Statamic ${{ matrix.statamic }}
 

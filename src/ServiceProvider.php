@@ -10,6 +10,7 @@ use ElSchneider\StatamicMaintenanceMode\Http\Middleware\PreventRequestsDuringMai
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
 use Illuminate\Support\Facades\Route;
 use Statamic\CP\Utilities\Utility;
+use Statamic\Facades\Permission;
 use Statamic\Facades\Utility as UtilityFacade;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -25,6 +26,7 @@ class ServiceProvider extends AddonServiceProvider
             __DIR__.'/../config/maintenance-mode.php' => config_path('statamic/maintenance-mode.php'),
         ], 'statamic-maintenance-mode-config');
 
+        $this->registerPermissions();
         $this->registerUtility();
         $this->registerActionRoutes(function () {
             Route::get('status', MaintenanceStatusController::class)
@@ -54,6 +56,19 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         parent::register();
+    }
+
+    protected function registerPermissions(): void
+    {
+        Permission::extend(function ($permissions) {
+            $permissions->group('utilities', function () use ($permissions) {
+                $permissions->register(Permissions::BYPASS_MAINTENANCE_MODE, function ($permission) {
+                    $permission
+                        ->label(__('Bypass maintenance mode'))
+                        ->description(__('View the site while maintenance mode is active.'));
+                });
+            });
+        });
     }
 
     protected function registerUtility(): void

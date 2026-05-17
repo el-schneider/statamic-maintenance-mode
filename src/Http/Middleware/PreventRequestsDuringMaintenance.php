@@ -6,6 +6,7 @@ namespace ElSchneider\StatamicMaintenanceMode\Http\Middleware;
 
 use Closure;
 use ElSchneider\StatamicMaintenanceMode\MaintenanceModeConfig;
+use ElSchneider\StatamicMaintenanceMode\Permissions as MaintenancePermissions;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as LaravelMiddleware;
 use Statamic\Facades\User;
@@ -31,7 +32,7 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
             return $next($request);
         }
 
-        if ($this->isAuthenticatedCpUser($request)) {
+        if ($this->isAuthenticatedBypassUser($request)) {
             return $next($request);
         }
 
@@ -68,7 +69,7 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
         return $request->path() === $expectedPath;
     }
 
-    protected function isAuthenticatedCpUser($request): bool
+    protected function isAuthenticatedBypassUser($request): bool
     {
         // Session may not be started yet in global middleware
         // We need to manually bootstrap the session from the cookie
@@ -100,10 +101,9 @@ class PreventRequestsDuringMaintenance extends LaravelMiddleware
                 return false;
             }
 
-            // Find the user and check permissions
             $user = User::find($userId);
 
-            return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+            return $user && ($user->isSuper() || $user->hasPermission(MaintenancePermissions::BYPASS_MAINTENANCE_MODE));
         } catch (Throwable) {
             return false;
         }

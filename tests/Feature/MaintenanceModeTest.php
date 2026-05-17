@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use ElSchneider\StatamicMaintenanceMode\MaintenanceModeConfig;
-use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 
 beforeEach(function () {
+    config(['session.driver' => 'file']);
+
     // Ensure we're not in maintenance mode
     Artisan::call('up');
 
@@ -57,26 +57,27 @@ it('allows super users to bypass maintenance mode', function () {
 
     $user = makeSuperUser();
 
-    // The middleware reads session cookies directly (before session middleware runs),
-    // so we need to set up a real session cookie rather than using actingAs()
-    $guardName = config('statamic.users.guards.cp', 'web');
-    $userIdKey = 'login_'.$guardName.'_'.sha1(Illuminate\Auth\SessionGuard::class);
-
-    // Use file session driver and create session with user ID
-    config(['session.driver' => 'file']);
-    $sessionId = Str::random(40);
-    $session = $this->app['session']->driver();
-    $session->setId($sessionId);
-    $session->put($userIdKey, $user->id());
-    $session->save();
-
-    // Create encrypted session cookie value with Laravel's prefix
-    $cookieName = config('session.cookie', 'laravel_session');
-    $prefixedValue = CookieValuePrefix::create($cookieName, $this->app['encrypter']->getKey()).$sessionId;
-    $encryptedValue = $this->app['encrypter']->encrypt($prefixedValue, false);
-
-    $response = $this->call('GET', '/test-page', [], [$cookieName => $encryptedValue]);
+    $response = $this->call('GET', '/test-page', [], authenticatedSessionCookie($user));
     expect($response->status())->toBe(200);
+});
+
+it('only allows users with the bypass permission to bypass maintenance mode', function () {
+    $entry = Entry::make()
+        ->collection('pages')
+        ->slug('test-page')
+        ->data(['title' => 'Test Page']);
+    $entry->save();
+
+    Artisan::call('down');
+
+    $cpUser = makeUserWithPermission('access cp', 'cp-user@example.com');
+    $bypassUser = makeUserWithPermission('bypass maintenance mode', 'bypass-user@example.com');
+
+    $this->call('GET', '/test-page', [], authenticatedSessionCookie($cpUser))
+        ->assertStatus(503);
+
+    $this->call('GET', '/test-page', [], authenticatedSessionCookie($bypassUser))
+        ->assertStatus(200);
 });
 
 it('allows whitelisted pages during maintenance', function () {

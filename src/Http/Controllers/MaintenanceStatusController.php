@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElSchneider\StatamicMaintenanceMode\Http\Controllers;
 
+use ElSchneider\StatamicMaintenanceMode\Permissions as MaintenancePermissions;
 use Illuminate\Foundation\Http\MaintenanceModeBypassCookie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,13 +20,12 @@ class MaintenanceStatusController
             return response()->json(['show' => false]);
         }
 
-        // Check if user can bypass maintenance
-        $canBypass = $this->isAuthenticatedCpUser() || $this->hasValidBypassCookie($request);
+        $canBypass = $this->isAuthenticatedBypassUser() || $this->hasValidBypassCookie($request);
 
         return response()->json(['show' => $canBypass]);
     }
 
-    protected function isAuthenticatedCpUser(): bool
+    protected function isAuthenticatedBypassUser(): bool
     {
         $guardName = config('statamic.users.guards.cp', 'web');
         $authUser = Auth::guard($guardName)->user();
@@ -36,7 +36,7 @@ class MaintenanceStatusController
 
         $user = User::find($authUser->getAuthIdentifier());
 
-        return $user && ($user->isSuper() || $user->hasPermission('access cp'));
+        return $user && ($user->isSuper() || $user->hasPermission(MaintenancePermissions::BYPASS_MAINTENANCE_MODE));
     }
 
     protected function hasValidBypassCookie(Request $request): bool
