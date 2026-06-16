@@ -38,6 +38,7 @@ A full Statamic instance is available for manual testing at `../statamic-mainten
 **URL:** http://statamic-maintenance-mode-test.test/ (served via Laravel Herd)
 
 **Super Admin Credentials:**
+
 - Email: `claude@claude.com`
 - Password: `claude`
 
