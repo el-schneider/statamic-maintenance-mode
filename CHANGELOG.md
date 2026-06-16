@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.3.1 - 2026-06-16
+
+### What's fixed
+
+- Fixed route trimming compatibility for PHP 8.3.
+
+### Maintenance
+
+- Hardened dependency maintenance by adding Composer and npm audits to CI.
+- Removed Dependabot auto-merge.
+- Switched Composer minimum stability to stable.
+- Updated npm dependency lockfile and Vite tooling to resolve audit advisories.
+- Disabled Pint's `mb_str_functions` rule because it can rewrite code to PHP 8.4-only functions while the addon supports PHP 8.2+.
+- Documented dependency and asset build guardrails for future agents.
+
 ## v0.3.0 - 2026-05-17
 
 ### Breaking changes
