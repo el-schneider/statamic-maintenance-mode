@@ -47,7 +47,7 @@
     "orchestra/testbench": "^9.0 || ^10.0",
     "pestphp/pest": "^4.0"
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "config": {
     "sort-packages": true,

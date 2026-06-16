@@ -36,8 +36,31 @@ jobs:
           composer require statamic/cms:${{ matrix.statamic }} --no-interaction --no-update
           composer update --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Audit Composer dependencies
+        run: composer audit --no-interaction
+
       - name: Run Pint
         run: ./vendor/bin/pint --test
 
       - name: Run Pest tests
         run: ./vendor/bin/pest --ci
+
+  npm-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=moderate

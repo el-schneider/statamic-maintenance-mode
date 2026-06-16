@@ -43,3 +43,11 @@ A full Statamic instance is available for manual testing at `../statamic-mainten
 - Password: `claude`
 
 Use the Playwright MCP tools for browser-based manual testing against this instance.
+
+## Asset Builds
+
+Do not commit rebuilt `resources/dist` assets for routine dependency/test maintenance. The `Build assets for distribution` GitHub Action rebuilds and commits dist files on `main` when frontend sources or package files change.
+
+## Dependency Security
+
+Keep `.npmrc` hardening intact. Do not bypass `min-release-age=7` unless explicitly applying a known security fix that has not aged past the release window.
