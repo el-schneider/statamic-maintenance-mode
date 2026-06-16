@@ -83,6 +83,6 @@ class MaintenanceNotice extends Tags
     {
         $actionPrefix = config('statamic.routes.action', '!/');
 
-        return '/'.mb_trim($actionPrefix, '/').'/statamic-maintenance-mode/status';
+        return '/'.trim($actionPrefix, '/').'/statamic-maintenance-mode/status';
     }
 }
