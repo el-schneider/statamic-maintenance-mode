@@ -69,7 +69,7 @@ To ensure maintenance mode works correctly, modify your server config to skip st
 **Nginx:**
 
 ```nginx
-set $try_static_files = "";
+set $try_static_files "";
 
 if (-f $document_root/../storage/framework/down) {
     set $try_static_files "skip";
