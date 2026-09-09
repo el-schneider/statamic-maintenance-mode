@@ -33,16 +33,9 @@ Uses Pest 4.0 with Statamic's `AddonTestCase` (via Orchestra Testbench 10.0). Te
 
 ## Manual Testing
 
-A full Statamic instance is available for manual testing at `../statamic-maintenance-mode-test/`.
+Sandboxes, URLs, ports, and credentials are machine-specific and live in an untracked `AGENTS.local.md` (in this directory or a parent). Read it before running the addon in a Statamic app.
 
-**URL:** http://statamic-maintenance-mode-test.test/ (served via Laravel Herd)
-
-**Super Admin Credentials:**
-
-- Email: `claude@claude.com`
-- Password: `claude`
-
-Use the Playwright MCP tools for browser-based manual testing against this instance.
+Verify CP and frontend behavior in a real browser; code review alone is not proof.
 
 ## Asset Builds
 
