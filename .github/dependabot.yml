@@ -3,19 +3,25 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
-      time: '00:30'
+      interval: weekly
+      day: friday
+      time: '15:00'
       timezone: Europe/Berlin
     cooldown:
       default-days: 7
       include:
         - '*'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
 
   - package-ecosystem: composer
     directory: /
     schedule:
-      interval: daily
-      time: '01:30'
+      interval: weekly
+      day: friday
+      time: '15:00'
       timezone: Europe/Berlin
     cooldown:
       default-days: 7
@@ -26,12 +32,27 @@ updates:
       - dependency-name: '*'
         update-types:
           - version-update:semver-major
+    groups:
+      composer-patch:
+        update-types:
+          - patch
+      composer-minor:
+        update-types:
+          - minor
+      composer-major:
+        update-types:
+          - major
+      composer-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
 
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: daily
-      time: '02:00'
+      interval: weekly
+      day: friday
+      time: '15:00'
       timezone: Europe/Berlin
     versioning-strategy: increase-if-necessary
     cooldown:
@@ -43,3 +64,17 @@ updates:
       - dependency-name: '*'
         update-types:
           - version-update:semver-major
+    groups:
+      npm-patch:
+        update-types:
+          - patch
+      npm-minor:
+        update-types:
+          - minor
+      npm-major:
+        update-types:
+          - major
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
